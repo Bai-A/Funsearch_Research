@@ -1,0 +1,47 @@
+
+@funsearch.evolve
+def priority(policy, env):
+  '''
+  The policy is a vector of integers denoting the predeterminate re-order levels for each stage.
+  The env is an instance of the environment which has the following attributes:
+  env.p = [positive float] unit price for final product.
+  env.r = [non-negative float; dimension |Stages|] unit cost for replenishment orders at each stage.
+  env.k = [non-negative float; dimension |Stages|] backlog cost or goodwill loss (per unit) for unfulfilled orders (demand or replenishment orders).
+  env.h = [non-negative float; dimension |Stages|-1] unit holding cost for excess on-hand inventory at each stage.
+            (Note: does not include pipeline inventory).
+  env.c = [positive integer; dimension |Stages|-1] production capacities for each suppliers (stages 1 through |Stage|).
+  env.L = [non-negative integer; dimension |Stages|-1] lead times in betwen stages.
+  env.I = On hand inventory at the start of each period at each stage (except last one).
+  env.T = Pipeline inventory at the start of each period at each stage (except last one).
+  env.R = Replenishment order placed at each period at each stage (except last one).
+  env.D = Customer demand at each period (at the retailer)
+  env.S = Sales performed at each period at each stage.
+  env.B = Backlog at each period at each stage.
+  env.LS = Lost sales at each period at each stage.
+  env.P = Total profit at each stage.
+  Design new policy that fits the problem and improve the score of this inventory management problem.
+  You may use exist plolicy as a reference and improve it.
+  also, you can use the information from the environment to design the policy which is never used.
+  The actions returned should be a vector of integers which indicate the number of units to order at each stage(same shape as policy).
+  env.observation_space records the upper and lower bound of the capacity in each node
+  EXAMPLE 1, you can create a new policy and choose one base on conditions at the end
+  policys = [policy1, ..]
+  action = max(policys)
+  EXAMPLE 2, the following code Gets echelon inventory levels
+  if env.period == 0:
+    inv_ech = np.cumsum(env.I[env.period] +
+      env.T[env.period])
+  else:
+    inv_ech = np.cumsum(env.I[env.period] +
+      env.T[env.period] - env.B[env.period-1, :-1])
+  EXAMPLE 3, If you want to change the policy while the demand at end is higher than the policy2, you can use the following code
+  if env.D[env.period + 1]> policy2:
+     action = policy3
+  you may change the shape of policy, but you need to get an unc_actions vector that is the same shape as env.c as output
+  you need to check whether the actions are feasible or not using code bellow
+  inv_const = np.hstack([env.I[env.period, 1:], np.Inf])
+  actions = np.minimum(env.c, np.minimum(unc_actions, inv_const)) '''
+  unc_actions=...
+  actions=policy
+  
+  return actions
